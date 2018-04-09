@@ -75,6 +75,37 @@ class UserFunctions {
         }
   }
 
+  public function getUserByEmail($email){
+    $con=mysqli_connect("localhost","root","","toponconcert");
+    $query = "SELECT name, surname, email FROM user WHERE user.email = '$email'";
+
+    $result = mysqli_query($con, $query) or die(mysql_error());
+
+    if(mysqli_num_rows($result) > 0){
+      $response["user"] = array();
+
+      while ($row = $result->fetch_assoc()) {
+          // temp user array
+          $user = array();
+          $user['name'] = $row['name'];
+          $user['surname'] = $row['surname'];
+          $user['email'] = $row['email'];
+          array_push($response["user"], $row);
+        }
+        $response["success"] = 1;
+        echo json_encode($response);
+
+      } else {
+        //no user with this email
+        $response["success"] = 0;
+        $response["message"] = "No user found";
+
+              echo json_encode($response);
+
+      }
+
+  }
+
 }
 
  ?>
